@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ScreenId } from './types';
+import { ACTIVE_CASE } from './data';
 import { Header } from './components/Header';
 import { MeetPandaScreen } from './screens/MeetPandaScreen';
 import { LabHubScreen } from './screens/LabHubScreen';
@@ -139,6 +140,7 @@ export function App() {
 
         {currentScreen === 'lab-hub' && (
           <LabHubScreen
+            lessonCase={ACTIVE_CASE}
             agentName={agentName || 'Agent'}
             hasCompletedLesson={hasCompletedLesson}
             skipDialogueInitially={skipHubDialogue}
@@ -149,7 +151,7 @@ export function App() {
         {currentScreen === 'lesson-intro' && (
           <LessonIntroScreen
             key={`intro-${lessonRunId}`}
-            agentName={agentName || 'Agent'}
+            lessonCase={ACTIVE_CASE}
             onStartGame1={() => navigateTo('game-1')}
           />
         )}
@@ -157,6 +159,7 @@ export function App() {
         {currentScreen === 'game-1' && (
           <Game1Understand
             key={`g1-${lessonRunId}`}
+            lessonCase={ACTIVE_CASE}
             onComplete={() => navigateTo('game-2')}
           />
         )}
@@ -164,6 +167,7 @@ export function App() {
         {currentScreen === 'game-2' && (
           <Game2Investigate
             key={`g2-${lessonRunId}`}
+            lessonCase={ACTIVE_CASE}
             onComplete={() => navigateTo('game-3')}
           />
         )}
@@ -171,6 +175,8 @@ export function App() {
         {currentScreen === 'game-3' && (
           <Game3Ownership
             key={`g3-${lessonRunId}`}
+            lessonCase={ACTIVE_CASE}
+            agentName={agentName || 'Agent'}
             onComplete={() => navigateTo('game-4')}
           />
         )}
@@ -178,6 +184,8 @@ export function App() {
         {currentScreen === 'game-4' && (
           <Game4ThinkAhead
             key={`g4-${lessonRunId}`}
+            lessonCase={ACTIVE_CASE}
+            agentName={agentName || 'Agent'}
             onComplete={() => navigateTo('reflection')}
           />
         )}
@@ -185,6 +193,7 @@ export function App() {
         {currentScreen === 'reflection' && (
           <ReflectionScreen
             key={`ref-${lessonRunId}`}
+            lessonCase={ACTIVE_CASE}
             agentName={agentName || 'Agent'}
             initialReflection={reflectionNote}
             onFinishLesson={handleFinishLesson}
@@ -193,6 +202,7 @@ export function App() {
 
         {currentScreen === 'completion' && (
           <CompletionScreen
+            lessonCase={ACTIVE_CASE}
             agentName={agentName || 'Agent'}
             reflectionNote={reflectionNote}
             onBackToLab={handleBackToLab}
@@ -202,10 +212,7 @@ export function App() {
       </main>
 
       <footer className="border-t border-[#ECE4D6] py-4 px-4 text-center text-xs text-[#64748B]">
-        <span>
-          CEL – Customer Excellence Lab · Interactive Demo · Fictional training
-          data only
-        </span>
+        <span>CEL – Customer Excellence Lab · Webnode Care</span>
       </footer>
     </div>
   );

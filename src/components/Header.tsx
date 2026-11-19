@@ -56,7 +56,8 @@ export function Header({
 
   return (
     <header className="sticky top-0 z-30 bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#E7DFD0]">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div className="px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto py-3 flex flex-wrap items-center justify-between gap-3">
         {/* Brand */}
         <button
           type="button"
@@ -131,7 +132,7 @@ export function Header({
               type="button"
               onClick={onResetDemo}
               className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#64748B] hover:text-[#072C2F] hover:bg-[#EFE9DC] transition-colors cursor-pointer"
-              title="Restart the entire demo"
+              title="Start over"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Restart</span>
@@ -139,11 +140,12 @@ export function Header({
           )}
         </div>
       </div>
+      </div>
 
-      {/* Lesson Stepper */}
+      {/* Lesson Stepper – same max width as the lesson cards below */}
       {isInsideLesson && (
-        <div className="border-t border-[#ECE4D6] bg-[#F6F1E7]/70">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-1.5 overflow-x-auto">
+        <div className="border-t border-[#ECE4D6] bg-[#F6F1E7]/70 px-4 sm:px-6">
+          <ol className="max-w-5xl mx-auto py-2 flex items-center gap-1 overflow-x-auto">
             {LESSON_STEPS.map((step, idx) => {
               const isCurrent = step.id === currentScreen;
               const isCompleted =
@@ -152,14 +154,14 @@ export function Header({
               const isUnlocked = step.stepIndex <= highestReachedStep;
 
               return (
-                <div key={step.id} className="flex items-center shrink-0">
+                <li key={step.id} className="flex items-center flex-1 min-w-fit">
                   <button
                     type="button"
                     disabled={!isUnlocked}
                     onClick={() => {
                       if (isUnlocked) onNavigateScreen(step.id);
                     }}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                    className={`flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                       isCurrent
                         ? 'bg-[#0F5C61] text-white shadow-xs'
                         : isCompleted
@@ -175,14 +177,15 @@ export function Header({
                     <span>{step.label}</span>
                   </button>
                   {idx < LESSON_STEPS.length - 1 && (
-                    <span className="mx-1 text-[#CBD5E1] text-xs select-none">
-                      /
-                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="w-3 sm:w-4 h-px bg-[#D6CCB8] shrink-0 mx-0.5"
+                    />
                   )}
-                </div>
+                </li>
               );
             })}
-          </div>
+          </ol>
         </div>
       )}
     </header>

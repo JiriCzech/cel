@@ -1,169 +1,194 @@
 import { useState } from 'react';
-import { ArrowRight, Mail, Tag } from 'lucide-react';
-import { CASE_META, CORE_MOTTO, HABITS } from '../data/caseData';
-import { HabitIcon } from '../components/HabitIcon';
-import { SpeechBubble } from '../components/SpeechBubble';
+import { ChevronDown, Filter, Inbox, Search } from 'lucide-react';
+import type { LessonCase, QueueTicket, TicketPriority, Tone } from '../types';
+import { PandaHint } from '../components/PandaHint';
 
 interface LessonIntroScreenProps {
-  agentName: string;
+  lessonCase: LessonCase;
   onStartGame1: () => void;
 }
 
+const AVATAR_COLORS = [
+  'bg-[#0F5C61] text-white',
+  'bg-[#F59E0B] text-white',
+  'bg-[#6366F1] text-white',
+  'bg-[#EC4899] text-white',
+  'bg-[#14B8A6] text-white',
+];
+
+const PRIORITY_DOT: Record<TicketPriority, string> = {
+  Low: 'bg-[#22C55E]',
+  Medium: 'bg-[#3B82F6]',
+  High: 'bg-[#F59E0B]',
+  Urgent: 'bg-[#EF4444]',
+};
+
+const STATE_STYLE: Record<Tone, string> = {
+  ok: 'bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]',
+  info: 'bg-[#E0F2FE] text-[#075985] border-[#BAE6FD]',
+  warn: 'bg-[#FEF3C7] text-[#92400E] border-[#FDE68A]',
+  danger: 'bg-[#FEE2E2] text-[#991B1B] border-[#FECACA]',
+  muted: 'bg-[#F1F5F9] text-[#475569] border-[#E2E8F0]',
+};
+
 export function LessonIntroScreen({
-  agentName,
+  lessonCase,
   onStartGame1,
 }: LessonIntroScreenProps) {
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const { queue } = lessonCase;
+  const [nudgeId, setNudgeId] = useState<string | null>(null);
+
+  const handleRowClick = (ticket: QueueTicket) => {
+    if (ticket.isLessonTicket) {
+      onStartGame1();
+    } else {
+      setNudgeId(ticket.id);
+    }
+  };
 
   return (
-    <section className="max-w-4xl mx-auto py-6 sm:py-10 space-y-6 animate-fade-up">
-      {step === 1 && (
-        <div className="cel-card p-6 sm:p-8">
-          <SpeechBubble
-            pose="explaining"
-            avatarSize="xl"
-            onContinue={() => setStep(2)}
-            continueLabel="Continue"
-          >
-            <p className="font-display font-bold text-xl sm:text-2xl text-[#072C2F]">
-              “{CORE_MOTTO}”
-            </p>
-            <p className="text-[#475569] text-sm sm:text-base">
-              Before we jump into today&apos;s customer ticket, {agentName},
-              let&apos;s look at what First Time Resolution really means.
-            </p>
-          </SpeechBubble>
+    <section className="max-w-5xl mx-auto py-6 sm:py-8 space-y-5 animate-fade-up">
+      <PandaHint pose="explaining">{queue.prompt}</PandaHint>
+
+      <div className="cel-card overflow-hidden">
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[#EEF2F6] bg-white">
+          <div className="flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-lg bg-[#E6F2F2] text-[#0F5C61] flex items-center justify-center">
+              <Inbox className="w-4 h-4" />
+            </span>
+            <div className="flex items-center gap-1.5">
+              <h2 className="font-display font-bold text-sm sm:text-base text-[#072C2F]">
+                {queue.viewName}
+              </h2>
+              <ChevronDown className="w-4 h-4 text-[#94A3B8]" />
+              <span className="ml-1 text-xs font-semibold text-[#64748B] bg-[#F1F5F9] rounded-md px-1.5 py-0.5">
+                {queue.tickets.length}
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-[#64748B]">
+            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-[#E2E8F0] px-2.5 py-1.5">
+              <Search className="w-3.5 h-3.5" />
+              Search tickets
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#E2E8F0] px-2.5 py-1.5">
+              <Filter className="w-3.5 h-3.5" />
+              Sort: Date created
+            </span>
+          </div>
         </div>
-      )}
 
-      {step === 2 && (
-        <div className="space-y-6 animate-fade-up">
-          <div className="cel-card p-6 sm:p-8">
-            <SpeechBubble pose="thinking" avatarSize="lg">
-              <p className="font-display font-bold text-xl text-[#072C2F]">
-                Solving a customer&apos;s real problem on the first try takes
-                four practical habits.
-              </p>
-              <p className="text-sm sm:text-base text-[#475569]">
-                You&apos;ll practice each one through a short interactive
-                challenge on a real Webnode domain case.
-              </p>
-            </SpeechBubble>
-
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-              {HABITS.map((habit) => (
-                <div
-                  key={habit.id}
-                  className="rounded-2xl border border-[#E6E0D4] bg-[#FAF7F2] p-4 sm:p-5 flex items-start gap-4"
-                >
-                  <HabitIcon habit={habit.id} size={46} className="shrink-0" />
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#0F5C61] text-white">
-                        Habit {habit.number}
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-[11px] font-semibold uppercase tracking-wider text-[#64748B] bg-[#FBFAF7] border-b border-[#EEF2F6]">
+                <th className="px-4 sm:px-5 py-2.5 font-semibold">Contact</th>
+                <th className="px-3 py-2.5 font-semibold">Subject</th>
+                <th className="px-3 py-2.5 font-semibold">State</th>
+                <th className="px-3 py-2.5 font-semibold hidden md:table-cell">Group</th>
+                <th className="px-3 py-2.5 font-semibold">Priority</th>
+                <th className="px-3 sm:pr-5 py-2.5 font-semibold hidden sm:table-cell">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {queue.tickets.map((ticket, idx) => {
+                const isLesson = Boolean(ticket.isLessonTicket);
+                return (
+                  <tr
+                    key={ticket.id}
+                    onClick={() => handleRowClick(ticket)}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleRowClick(ticket);
+                      }
+                    }}
+                    className={`group border-b border-[#F1F5F9] last:border-b-0 cursor-pointer transition-colors outline-none focus-visible:bg-[#F0F9F9] ${
+                      isLesson
+                        ? 'bg-[#F7FEE7]/60 hover:bg-[#ECFCCB]/70'
+                        : 'hover:bg-[#FAFAF9]'
+                    }`}
+                  >
+                    <td className="px-4 sm:px-5 py-3">
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`relative w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shrink-0 ${
+                            AVATAR_COLORS[idx % AVATAR_COLORS.length]
+                          }`}
+                        >
+                          {ticket.contactName.charAt(0)}
+                          {isLesson && (
+                            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#84CC16] border-2 border-white animate-pulse" />
+                          )}
+                        </span>
+                        <div className="min-w-0">
+                          <div
+                            className={`truncate ${
+                              isLesson ? 'font-bold text-[#072C2F]' : 'font-medium text-[#334155]'
+                            }`}
+                          >
+                            {ticket.contactName}
+                          </div>
+                          <div className="text-xs text-[#94A3B8] truncate">
+                            {ticket.createdAgo}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-3 py-3 min-w-[200px]">
+                      <div
+                        className={`${
+                          isLesson
+                            ? 'font-semibold text-[#072C2F] group-hover:text-[#0F5C61] group-hover:underline'
+                            : 'text-[#334155]'
+                        }`}
+                      >
+                        {ticket.subject}{' '}
+                        <span className="font-mono text-xs text-[#94A3B8] font-normal">
+                          #{ticket.id}
+                        </span>
+                      </div>
+                      {nudgeId === ticket.id && (
+                        <div className="text-xs text-[#B45309] mt-0.5 animate-fade-up">
+                          A teammate is already on this one. Grab the new ticket.
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-3 py-3">
+                      <span
+                        className={`inline-block whitespace-nowrap text-[11px] font-semibold border rounded-md px-2 py-0.5 ${
+                          STATE_STYLE[ticket.stateTone]
+                        }`}
+                      >
+                        {ticket.state}
                       </span>
-                      <h3 className="font-display font-extrabold text-sm text-[#072C2F] tracking-wide">
-                        {habit.title}
-                      </h3>
-                    </div>
-                    <p className="text-sm text-[#475569] leading-relaxed">
-                      {habit.fullDesc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setStep(3)}
-                className="cel-btn-primary"
-              >
-                See today&apos;s case
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+                    </td>
+                    <td className="px-3 py-3 text-[#475569] whitespace-nowrap hidden md:table-cell">
+                      {ticket.group}
+                    </td>
+                    <td className="px-3 py-3 whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1.5 text-[#334155]">
+                        <span
+                          className={`w-2 h-2 rounded-full ${PRIORITY_DOT[ticket.priority]}`}
+                        />
+                        {ticket.priority}
+                      </span>
+                    </td>
+                    <td className="px-3 sm:pr-5 py-3 text-[#475569] hidden sm:table-cell">
+                      {ticket.status}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      )}
-
-      {step === 3 && (
-        <div className="space-y-6 animate-fade-up">
-          <div className="cel-card p-6 sm:p-8">
-            <SpeechBubble pose="explaining" avatarSize="lg">
-              <p className="font-display font-bold text-xl text-[#072C2F]">
-                “Every customer has a story. Let&apos;s discover this one.”
-              </p>
-              <p className="text-sm sm:text-base text-[#475569]">
-                A new ticket just arrived in your queue. Take a moment to look at
-                the case before we begin.
-              </p>
-            </SpeechBubble>
-
-            {/* Incoming ticket preview card */}
-            <div className="mt-6 rounded-2xl border-2 border-[#0F5C61]/20 bg-[#FAF7F2] p-5 sm:p-6 space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#E5DEC9]">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-9 h-9 rounded-xl bg-[#0F5C61] text-white flex items-center justify-center">
-                    <Mail className="w-4 h-4" />
-                  </span>
-                  <div>
-                    <div className="text-xs font-mono text-[#64748B]">
-                      Ticket #{CASE_META.ticketId} · {CASE_META.receivedAt}
-                    </div>
-                    <h2 className="font-display font-bold text-base sm:text-lg text-[#072C2F]">
-                      Case: The wrong domain
-                    </h2>
-                  </div>
-                </div>
-
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ECFCCB] text-[#3F6212] text-xs font-bold">
-                  <Tag className="w-3.5 h-3.5" />
-                  Domains &amp; Billing
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
-                <div className="bg-white rounded-xl p-3 border border-[#E7DFD0]">
-                  <div className="text-[#64748B] text-xs">Customer</div>
-                  <div className="font-semibold text-[#072C2F] mt-0.5">
-                    {CASE_META.customerName}
-                  </div>
-                </div>
-                <div className="bg-white rounded-xl p-3 border border-[#E7DFD0]">
-                  <div className="text-[#64748B] text-xs">Intended domain</div>
-                  <div className="font-mono font-semibold text-[#0F5C61] mt-0.5">
-                    {CASE_META.intendedDomain}
-                  </div>
-                </div>
-                <div className="bg-white rounded-xl p-3 border border-[#E7DFD0]">
-                  <div className="text-[#64748B] text-xs">Purchased by mistake</div>
-                  <div className="font-mono font-semibold text-[#B45309] mt-0.5">
-                    {CASE_META.purchasedDomain}
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-xs text-[#64748B]">
-                Note: All customer details in this training case are anonymized
-                fictional placeholders inspired by real support scenarios.
-              </p>
-            </div>
-
-            <div className="mt-6 flex justify-end">
-              <button
-                type="button"
-                onClick={onStartGame1}
-                className="cel-btn-lime text-base"
-              >
-                Start Habit 1: Understand
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
     </section>
   );
 }

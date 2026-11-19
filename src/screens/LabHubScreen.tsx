@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { ArrowRight, CheckCircle2, Clock, Sparkles } from 'lucide-react';
-import { CORE_MOTTO, HABITS } from '../data/caseData';
+import type { LessonCase } from '../types';
+import { CORE_MOTTO, HABITS } from '../data';
 import { HabitIcon } from '../components/HabitIcon';
 import { SpeechBubble } from '../components/SpeechBubble';
 import { WisdomBanner } from '../components/WisdomBanner';
 
 interface LabHubScreenProps {
+  lessonCase: LessonCase;
   agentName: string;
   hasCompletedLesson: boolean;
   skipDialogueInitially?: boolean;
@@ -13,6 +15,7 @@ interface LabHubScreenProps {
 }
 
 export function LabHubScreen({
+  lessonCase,
   agentName,
   hasCompletedLesson,
   skipDialogueInitially = false,
@@ -23,7 +26,7 @@ export function LabHubScreen({
   );
 
   return (
-    <section className="max-w-4xl mx-auto py-6 sm:py-10 space-y-6 animate-fade-up">
+    <section className="max-w-5xl mx-auto py-6 sm:py-10 space-y-6 animate-fade-up">
       {/* Panda Introduction Dialogue */}
       <div className="cel-card p-6 sm:p-8">
         {step === 1 && (
@@ -155,9 +158,8 @@ export function LabHubScreen({
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-t border-[#EFE9DC]">
-                <div className="text-sm text-[#475569]">
-                  Case study: <strong className="text-[#072C2F]">The wrong domain</strong>{' '}
-                  <span className="text-[#94A3B8]">·</span> Real support scenario
+                <div className="text-sm text-[#475569] font-medium">
+                  {lessonCase.teaser}
                 </div>
                 <button
                   type="button"
