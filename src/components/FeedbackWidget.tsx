@@ -29,7 +29,7 @@ interface FeedbackNote {
 const STORAGE_KEY = 'cel_team_feedback_v1';
 
 const SCREEN_LABELS: Record<ScreenId, string> = {
-  'meet-panda': 'Úvod',
+  'meet-panda': 'Welcome',
   'lab-hub': 'First Time Resolution',
   'lesson-intro': 'Intro',
   'game-1': '1. Understand',
@@ -37,7 +37,7 @@ const SCREEN_LABELS: Record<ScreenId, string> = {
   'game-3': '3. Ownership',
   'game-4': '4. Think Ahead',
   reflection: 'Reflection',
-  completion: 'Shrnutí',
+  completion: 'Summary',
 };
 
 const LESSON_OVERVIEW_SCREENS: ScreenId[] = [
@@ -54,9 +54,9 @@ const REACTIONS: {
   label: string;
   badge: string;
 }[] = [
-  { id: 'like', label: '👍 Líbí se', badge: 'bg-[#ECFCCB] text-[#3F6212]' },
-  { id: 'improve', label: '🔧 Upravit', badge: 'bg-[#FEF3C7] text-[#92400E]' },
-  { id: 'idea', label: '💡 Nápad', badge: 'bg-[#E0F2FE] text-[#075985]' },
+  { id: 'like', label: '👍 Like', badge: 'bg-[#ECFCCB] text-[#3F6212]' },
+  { id: 'improve', label: '🔧 Improve', badge: 'bg-[#FEF3C7] text-[#92400E]' },
+  { id: 'idea', label: '💡 Idea', badge: 'bg-[#E0F2FE] text-[#075985]' },
 ];
 
 function loadNotes(): FeedbackNote[] {
@@ -241,7 +241,7 @@ export function FeedbackWidget({
       {isOpen && (
         <div
           role="dialog"
-          aria-label="Feedback k obrazovce"
+          aria-label="Screen feedback"
           className="fixed bottom-16 right-4 z-40 w-[calc(100vw-2rem)] sm:w-96 max-h-[82vh] flex flex-col rounded-2xl border border-[#CBD5E1] bg-white shadow-xl animate-pop-in overflow-hidden"
         >
           {/* Context Header */}
@@ -257,7 +257,7 @@ export function FeedbackWidget({
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              aria-label="Zavřít feedback"
+              aria-label="Close feedback"
               className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
@@ -320,7 +320,7 @@ export function FeedbackWidget({
                 rows={2}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Co tě k téhle obrazovce napadá?"
+                placeholder="What are your thoughts on this screen?"
                 className="w-full rounded-xl border border-[#CBD5E1] bg-[#FAF7F2] px-3 py-2 text-sm text-[#1E293B] placeholder:text-[#94A3B8] focus:border-[#0F5C61] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F5C61]/20"
               />
 
@@ -331,7 +331,7 @@ export function FeedbackWidget({
                     onClick={handleCancelEdit}
                     className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#64748B] hover:bg-[#F1F5F9] cursor-pointer"
                   >
-                    Zrušit
+                    Cancel
                   </button>
                 )}
                 <button
@@ -339,7 +339,7 @@ export function FeedbackWidget({
                   disabled={!comment.trim()}
                   className="cel-btn-primary text-xs px-3.5 py-2"
                 >
-                  {editingId ? 'Uložit úpravu' : 'Uložit poznámku'}
+                  {editingId ? 'Save changes' : 'Save note'}
                 </button>
               </div>
             </form>
@@ -347,7 +347,7 @@ export function FeedbackWidget({
             {notes.length > 0 && (
               <div className="pt-3 border-t border-[#EFE9DC] space-y-2">
                 <div className="text-[11px] font-bold uppercase tracking-wider text-[#64748B]">
-                  Uložené poznámky ({notes.length})
+                  Saved notes ({notes.length})
                 </div>
                 <ul className="space-y-2">
                   {notes.map((note) => {
@@ -374,7 +374,7 @@ export function FeedbackWidget({
                             <button
                               type="button"
                               onClick={() => handleStartEdit(note)}
-                              aria-label="Upravit poznámku"
+                              aria-label="Edit note"
                               className="p-1 rounded text-[#64748B] hover:text-[#0F5C61] hover:bg-white cursor-pointer"
                             >
                               <Pencil className="w-3.5 h-3.5" />
@@ -382,7 +382,7 @@ export function FeedbackWidget({
                             <button
                               type="button"
                               onClick={() => handleDelete(note.id)}
-                              aria-label="Smazat poznámku"
+                              aria-label="Delete note"
                               className="p-1 rounded text-[#64748B] hover:text-[#B91C1C] hover:bg-white cursor-pointer"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -411,12 +411,12 @@ export function FeedbackWidget({
               {copied ? (
                 <>
                   <Check className="w-4 h-4 stroke-[2.5]" />
-                  Zkopírováno do schránky
+                  Copied to clipboard
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4" />
-                  Zkopírovat celý feedback ({notes.length})
+                  Copy all feedback ({notes.length})
                 </>
               )}
             </button>
