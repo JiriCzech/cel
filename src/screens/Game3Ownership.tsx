@@ -22,7 +22,6 @@ export function Game3Ownership({
 
   const [currentIdx, setCurrentIdx] = useState(0);
   const [locked, setLocked] = useState<Record<string, string>>({});
-  const [lockedFeedback, setLockedFeedback] = useState<Record<string, string>>({});
   const [draftOptionId, setDraftOptionId] = useState<string | null>(null);
 
   const isDone = currentIdx >= steps.length;
@@ -37,7 +36,6 @@ export function Game3Ownership({
 
     if (option.isCorrect) {
       setLocked((prev) => ({ ...prev, [currentStep.id]: option.text }));
-      setLockedFeedback((prev) => ({ ...prev, [currentStep.id]: option.feedback }));
       setDraftOptionId(null);
       setCurrentIdx((i) => i + 1);
     } else {
@@ -72,17 +70,14 @@ export function Game3Ownership({
               return (
                 <div
                   key={step.id}
-                  className="rounded-xl border border-[#D9EFB5] bg-[#F7FEE7] px-4 py-3 animate-fade-up"
+                  className="rounded-xl border border-[#D9EFB5] bg-[#F7FEE7] px-3.5 py-2.5 flex items-center gap-2.5 text-sm font-semibold text-[#3F6212] animate-fade-up"
                 >
-                  <div className="flex items-center gap-2.5 text-sm font-semibold text-[#3F6212]">
-                    <span className="w-5 h-5 rounded-full bg-[#84CC16] text-[#072C2F] flex items-center justify-center shrink-0">
-                      <Check className="w-3 h-3 stroke-[3]" />
-                    </span>
-                    {step.label}
-                  </div>
-                  <p className="text-xs text-[#4D7C0F] mt-1 pl-[30px]">
-                    {lockedFeedback[step.id]}
-                  </p>
+                  <span className="w-5 h-5 rounded-full bg-[#84CC16] text-[#072C2F] flex items-center justify-center shrink-0">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </span>
+                  <span>
+                    {idx + 1}. {step.label}
+                  </span>
                 </div>
               );
             }

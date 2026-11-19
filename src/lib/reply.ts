@@ -2,7 +2,8 @@ import type { LessonCase, ThinkAheadOption } from '../types';
 
 export interface ReplyParagraph {
   key: string;
-  text: string;
+  text?: string;
+  bullets?: string[];
 }
 
 /** Text of the correct option for every ownership step, keyed by step id. */
@@ -15,15 +16,14 @@ export function correctReplyTexts(lessonCase: LessonCase): Record<string, string
   );
 }
 
-/** Joins the sentences of the picked Think Ahead options in data order. */
-export function thinkAheadParagraph(
+/** Returns the sentences of the picked Think Ahead options in data order. */
+export function thinkAheadBullets(
   options: ThinkAheadOption[],
   pickedIds: string[]
-): string {
+): string[] {
   return options
     .filter((o) => o.isCorrect && o.sentence && pickedIds.includes(o.id))
-    .map((o) => o.sentence)
-    .join(' ');
+    .map((o) => o.sentence as string);
 }
 
 /**
@@ -33,12 +33,18 @@ export function thinkAheadParagraph(
 export function buildReplyParagraphs(
   lessonCase: LessonCase,
   texts: Record<string, string | undefined>,
-  extraParagraph?: string
+  extra?: string | string[]
 ): ReplyParagraph[] {
   const result: ReplyParagraph[] = [];
+  const hasExtra = Array.isArray(extra) ? extra.length > 0 : Boolean(extra);
+
   for (const step of lessonCase.ownership.steps) {
-    if (extraParagraph && step.id === lessonCase.thinkAhead.insertBeforeStep) {
-      result.push({ key: 'think-ahead', text: extraParagraph });
+    if (hasExtra && step.id === lessonCase.thinkAhead.insertBeforeStep) {
+      if (Array.isArray(extra)) {
+        result.push({ key: 'think-ahead', bullets: extra });
+      } else if (extra) {
+        result.push({ key: 'think-ahead', text: extra });
+      }
     }
     const text = texts[step.id];
     if (text) result.push({ key: step.id, text });
@@ -52,9 +58,15 @@ export function replyToPlainText(
   paragraphs: ReplyParagraph[],
   agentName: string
 ): string {
+  const body = paragraphs.map((p) =>
+    p.bullets && p.bullets.length > 0
+      ? p.bullets.map((b) => `• ${b}`).join('\n')
+      : p.text ?? ''
+  );
+
   return [
     lessonCase.reply.greeting,
-    ...paragraphs.map((p) => p.text),
+    ...body,
     `${lessonCase.reply.signOff}\n${agentName}\n${lessonCase.reply.team}`,
   ].join('\n\n');
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { ScreenId } from './types';
 import { ACTIVE_CASE } from './data';
 import { Header } from './components/Header';
+import { FeedbackWidget } from './components/FeedbackWidget';
 import { MeetPandaScreen } from './screens/MeetPandaScreen';
 import { LabHubScreen } from './screens/LabHubScreen';
 import { LessonIntroScreen } from './screens/LessonIntroScreen';
@@ -214,6 +215,11 @@ export function App() {
       <footer className="border-t border-[#ECE4D6] py-4 px-4 text-center text-xs text-[#64748B]">
         <span>CEL – Customer Excellence Lab · Webnode Care</span>
       </footer>
+
+      <FeedbackWidget
+        currentScreen={currentScreen}
+        agentName={agentName || 'Tester'}
+      />
     </div>
   );
 }

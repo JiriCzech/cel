@@ -7,7 +7,7 @@ import { EmailPreview } from '../components/EmailPreview';
 import {
   buildReplyParagraphs,
   correctReplyTexts,
-  thinkAheadParagraph,
+  thinkAheadBullets,
 } from '../lib/reply';
 
 interface Game4ThinkAheadProps {
@@ -27,6 +27,7 @@ export function Game4ThinkAhead({
 
   const [picked, setPicked] = useState<string[]>([]);
   const [rejected, setRejected] = useState<string[]>([]);
+  const [lastClickedId, setLastClickedId] = useState<string | null>(null);
 
   const isDone = picked.length === requiredCount;
 
@@ -34,6 +35,8 @@ export function Game4ThinkAhead({
     if (isDone) return;
     const option = options.find((o) => o.id === id);
     if (!option) return;
+
+    setLastClickedId(id);
     if (option.isCorrect) {
       setPicked((prev) =>
         prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
@@ -43,11 +46,11 @@ export function Game4ThinkAhead({
     }
   };
 
-  const extra = thinkAheadParagraph(options, picked);
+  const bullets = thinkAheadBullets(options, picked);
   const paragraphs = buildReplyParagraphs(
     lessonCase,
     correctReplyTexts(lessonCase),
-    extra || undefined
+    bullets
   );
 
   return (
@@ -79,7 +82,8 @@ export function Game4ThinkAhead({
             {options.map((option) => {
               const isPicked = picked.includes(option.id);
               const isRejected = rejected.includes(option.id);
-              const showFeedback = isPicked || isRejected;
+              const showFeedback =
+                lastClickedId === option.id && (isPicked || isRejected);
               return (
                 <div key={option.id}>
                   <button
@@ -108,7 +112,11 @@ export function Game4ThinkAhead({
                       {isPicked && <Check className="w-3 h-3 stroke-[3]" />}
                       {isRejected && <X className="w-3 h-3 stroke-[3]" />}
                     </span>
-                    <span className={isRejected ? 'line-through decoration-[#D6A43A]/60' : ''}>
+                    <span
+                      className={
+                        isRejected ? 'line-through decoration-[#D6A43A]/60' : ''
+                      }
+                    >
                       {option.text}
                     </span>
                   </button>
@@ -133,7 +141,11 @@ export function Game4ThinkAhead({
 
           {isDone && (
             <div className="pt-3 border-t border-[#EFE9DC] flex justify-end animate-fade-up">
-              <button type="button" onClick={onComplete} className="cel-btn-lime text-sm">
+              <button
+                type="button"
+                onClick={onComplete}
+                className="cel-btn-lime text-sm"
+              >
                 <Send className="w-4 h-4" />
                 Send reply
               </button>

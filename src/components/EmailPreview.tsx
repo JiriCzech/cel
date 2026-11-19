@@ -55,19 +55,29 @@ export function EmailPreview({
       >
         <p>{reply.greeting}</p>
 
-        {paragraphs.map((p) => (
-          <p
-            key={`${p.key}-${p.text.length}`}
-            className={`animate-fade-up ${
-              p.key === draftKey ? 'text-[#475569]' : ''
-            }`}
-          >
-            {p.text}
-            {p.key === draftKey && (
-              <span className="inline-block w-[2px] h-[1em] ml-0.5 -mb-[2px] bg-[#0F5C61] animate-pulse" />
-            )}
-          </p>
-        ))}
+        {paragraphs.map((p) =>
+          p.bullets && p.bullets.length > 0 ? (
+            <ul key={p.key} className="list-disc pl-5 space-y-1.5">
+              {p.bullets.map((bullet) => (
+                <li key={bullet} className="animate-fade-up">
+                  {bullet}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p
+              key={`${p.key}-${p.text?.length ?? 0}`}
+              className={`animate-fade-up ${
+                p.key === draftKey ? 'text-[#475569]' : ''
+              }`}
+            >
+              {p.text}
+              {p.key === draftKey && (
+                <span className="inline-block w-[2px] h-[1em] ml-0.5 -mb-[2px] bg-[#0F5C61] animate-pulse" />
+              )}
+            </p>
+          )
+        )}
 
         {Array.from({ length: pendingCount }).map((_, i) => (
           <div key={`pending-${i}`} className="space-y-1.5 py-0.5" aria-hidden="true">

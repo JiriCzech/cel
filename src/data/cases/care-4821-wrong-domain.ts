@@ -270,13 +270,13 @@ export const CASE_CARE_4821: LessonCase = {
           ],
         },
         fact: {
-          label: 'alexmorgan.com',
-          value: 'Searched, never ordered',
+          label: 'Target',
+          value: 'alexmorgan.com · searched, not ordered',
         },
       },
     ],
     check: {
-      question: 'So what can you actually offer Alex?',
+      question: 'Based on Tools, what is the right solution?',
       options: [
         {
           id: 'refund',
@@ -317,22 +317,16 @@ export const CASE_CARE_4821: LessonCase = {
         label: 'Open the reply',
         options: [
           {
-            id: 'generic',
-            text: 'Thank you for contacting Webnode Support. We have received your request and will be happy to help.',
+            id: 'blame',
+            text: 'Please note that domain orders should always be double-checked before payment.',
             isCorrect: false,
-            feedback: 'Polite but generic – nothing shows you actually read the message.',
+            feedback: 'Even if true, it blames Alex and puts them on the defensive.',
           },
           {
             id: 'own',
             text: "I'm sorry about the mix-up at checkout. I can see you meant to register alexmorgan.com, and designer-portfolio.net was ordered instead.",
             isCorrect: true,
             feedback: 'Naming the real problem tells Alex straight away that you understood.',
-          },
-          {
-            id: 'blame',
-            text: 'Please note that domain orders should always be double-checked before payment.',
-            isCorrect: false,
-            feedback: 'Even if true, it blames Alex and puts them on the defensive.',
           },
         ],
       },
@@ -352,12 +346,6 @@ export const CASE_CARE_4821: LessonCase = {
             isCorrect: false,
             feedback: 'A bare policy line explains nothing and closes the conversation.',
           },
-          {
-            id: 'false-hope',
-            text: "I've asked our billing team whether they can make an exception and refund it.",
-            isCorrect: false,
-            feedback: 'False hope – Orders already shows the domain is non-refundable.',
-          },
         ],
       },
       {
@@ -371,12 +359,6 @@ export const CASE_CARE_4821: LessonCase = {
             feedback: 'It sends Alex away from a problem we can solve ourselves.',
           },
           {
-            id: 'keep',
-            text: 'designer-portfolio.net is actually a great address for a portfolio, so you could simply keep using it.',
-            isCorrect: false,
-            feedback: 'It ignores the outcome Alex asked for.',
-          },
-          {
             id: 'own',
             text: "Here's what I can do: your Mini package includes a free 1-year domain voucher you haven't used yet, so you can register alexmorgan.com at no extra cost.",
             isCorrect: true,
@@ -388,12 +370,6 @@ export const CASE_CARE_4821: LessonCase = {
         id: 'close',
         label: 'Close the loop',
         options: [
-          {
-            id: 'generic',
-            text: 'Let me know if you have any other questions.',
-            isCorrect: false,
-            feedback: 'Standard, but it leaves Alex to work out what happens next.',
-          },
           {
             id: 'own',
             text: "If anything is unclear, just reply to this email – I'll keep an eye on your ticket until alexmorgan.com is live.",
@@ -420,11 +396,11 @@ export const CASE_CARE_4821: LessonCase = {
     options: [
       {
         id: 'voucher-howto',
-        text: 'Explain exactly how to apply the voucher in the administration',
+        text: 'Explain how to apply the voucher in the administration',
         isCorrect: true,
         feedback: "Otherwise Alex writes back asking 'where do I use it?'",
         sentence:
-          'To use the voucher, open your website administration, go to Domains, search for alexmorgan.com and choose the voucher as the payment method at checkout.',
+          'Open your website administration, go to Domains, search for alexmorgan.com and choose the free voucher at checkout.',
       },
       {
         id: 'promise-available',
@@ -434,17 +410,11 @@ export const CASE_CARE_4821: LessonCase = {
       },
       {
         id: 'disconnect',
-        text: 'Confirm that the unwanted domain will be disconnected from the project',
+        text: 'Confirm that designer-portfolio.net will be disconnected from the project',
         isCorrect: true,
         feedback: "Answers 'what happens to the domain I didn't want?' before Alex asks.",
         sentence:
-          'Once it is registered, I will disconnect designer-portfolio.net from your project and set alexmorgan.com as your main domain.',
-      },
-      {
-        id: 'dns',
-        text: 'Explain how to set up DNS records for the new domain',
-        isCorrect: false,
-        feedback: 'A domain registered through Webnode connects automatically – DNS talk would only confuse.',
+          'Once registered, I will disconnect designer-portfolio.net from your project and set alexmorgan.com as your main domain.',
       },
       {
         id: 'renewal',

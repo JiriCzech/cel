@@ -242,7 +242,7 @@ export function Game2Investigate({ lessonCase, onComplete }: Game2InvestigatePro
                   <button
                     type="button"
                     onClick={() => openTab(tab.id)}
-                    className={`w-full text-left grid grid-cols-[92px_1fr] gap-2 items-baseline rounded-lg px-2.5 py-2 text-[13px] transition-colors cursor-pointer ${
+                    className={`w-full text-left grid grid-cols-[76px_1fr] gap-2 items-baseline rounded-lg px-2.5 py-2 text-[13px] transition-colors cursor-pointer ${
                       unlocked
                         ? 'bg-[#FBFAF7] hover:bg-[#F3EFE6]'
                         : 'hover:bg-[#FBFAF7]'
@@ -272,10 +272,15 @@ export function Game2Investigate({ lessonCase, onComplete }: Game2InvestigatePro
           </ul>
 
           {allVisited && (
-            <div className="pt-4 border-t border-[#EFE9DC] space-y-2.5 animate-fade-up">
-              <h3 className="font-display font-bold text-sm text-[#072C2F]">
-                {check.question}
-              </h3>
+            <div className="rounded-xl border border-[#0F5C61]/25 bg-[#F6FAF9] p-3.5 sm:p-4 space-y-2.5 animate-fade-up">
+              <div>
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-[#0F5C61]">
+                  Choose solution
+                </div>
+                <h3 className="font-display font-bold text-sm text-[#072C2F] mt-0.5">
+                  {check.question}
+                </h3>
+              </div>
               {check.options.map((option) => {
                 const isSelected = answerId === option.id;
                 const isRight = isSelected && option.isCorrect;
@@ -292,8 +297,8 @@ export function Game2Investigate({ lessonCase, onComplete }: Game2InvestigatePro
                         : isWrong
                           ? 'bg-[#FFFBEB] border-[#F59E0B]'
                           : solved
-                            ? 'border-[#E2E8F0] opacity-50'
-                            : 'border-[#E2E8F0] hover:border-[#0F5C61] cursor-pointer'
+                            ? 'bg-white border-[#E2E8F0] opacity-50'
+                            : 'bg-white border-[#E2E8F0] hover:border-[#0F5C61] cursor-pointer'
                     }`}
                   >
                     {option.text}
